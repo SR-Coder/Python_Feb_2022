@@ -92,3 +92,26 @@ i = 0
 while i < 10:
     print(i);
     i += 1
+
+
+#  FUNCTIONS
+print("*"*50)
+print("FUNCTIONS")
+print("*"*50)
+
+# function definition
+# keyword - def | function name | parens (optional parameters) | :
+def add_two():
+    # add some functionality
+    print(2+2)
+    return 2+2
+
+# call the function
+my_num = add_two()
+print(my_num)
+
+
+def addition(num1, num2):
+    return num1+num2
+
+print(addition(2,13))
