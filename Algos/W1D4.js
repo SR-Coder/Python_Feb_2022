@@ -5,20 +5,9 @@
   
   Do not ignore spaces, punctuation and capitalization
  */
- /*
- 1. Start with a string going forward and backwards []
- 2. Create a looop that goes forwards and backwards []
- 3.
-
-
-// let text = "How are you doing today?";
-// const myArray = text.split(" ");
-// let word = myArray[1];
-
 
   const str1 = "a x a";
   const expected1 = true;
-
   
   const str2 = "racecar";
   const expected2 = true;
@@ -28,7 +17,6 @@
   
   const str4 = "oho!";
   const expected4 = false;
-
   
   /**
    * Determines if the given str is a palindrome (same forwards and backwards).
@@ -40,6 +28,25 @@
   function isPalindrome(str) {}
   
   module.exports = { isPalindrome };
+  
+  /*****************************************************************************/
+  
+  /**
+   * - Time: O(n/2) -> O(n) linear.
+   * - Space: O(1) constant.
+   */
+  function isPalindrome(str) {
+    for (let i = 0; i < Math.floor(str.length / 2); i++) {
+      // Looping inwards from both sides.
+      let leftChar = str[i];
+      let rightChar = str[str.length - 1 - i];
+  
+      if (leftChar !== rightChar) {
+        return false; // early exit
+      }
+    }
+    return true;
+  }
   
   /*****************************************************************************/
 
@@ -79,3 +86,81 @@ function longestPalindromicSubstring(str) {}
 module.exports = { longestPalindromicSubstring: longestPal };
 
 /*****************************************************************************/
+
+/**
+ * - Time: O(n^2 * 2k). The n^2 part comes from the j loop.
+ *    2k is from the iterations of getPalindrome & slice.
+ * - Space: O(n) linear.
+ */
+function longestPalindromicSubstring(str) {
+  let longestPalindrome = str[0];
+
+  // generate every sub string 1 at a time and check
+  // if it is a palindrome and if it is longer than
+  // the current longest
+  for (let i = 0; i < str.length; i++) {
+    for (let j = i + 1; j < str.length + 1; j++) {
+      let subStr = str.slice(i, j);
+
+      if (subStr.length > longestPalindrome.length && isPalindrome(subStr)) {
+        longestPalindrome = subStr;
+      }
+    }
+  }
+  return longestPalindrome;
+}
+
+/**
+ * - Time: O(n^2) quadratic.
+ * - Space: O(n) linear.
+ */
+function longestPal(str) {
+  let longestPal = "";
+  const midIdx = Math.floor(str.length / 2);
+
+  for (let i = 0; i < str.length; i++) {
+    /* 
+    Once we pass the center, the longest possible pal from there gets shorter
+    because we will hit the right end of the string sooner so we can early exit
+    if there aren't enough chars left.
+    */
+    if (i > midIdx && str.length - 1 < longestPal.length) {
+      break;
+    }
+
+    const oddPalindrome = concatPalindromeFromCenter(str, i, i);
+    const evenPalindrome = concatPalindromeFromCenter(str, i, i + 1);
+    oddPalindrome.length > longestPal.length && (longestPal = oddPalindrome);
+    evenPalindrome.length > longestPal.length && (longestPal = evenPalindrome);
+  }
+  return longestPal;
+}
+
+/**
+ * Finds the longest palindrome by expanding out from the given indexes.
+ * - Time: O(n) linear. n = right - left which could be the full string.
+ * - Space: O(n) linear.
+ * @param {string} str
+ * @param {number} left Left index to expand out from.
+ * @param {number} right Right index to expand out from.
+ * @returns {string} The longest palindrome from the starting given indexes.
+ */
+function concatPalindromeFromCenter(str, left, right) {
+  let leftPalSub = "",
+    rightPalSub = "";
+
+  // Used for checking odd palindrome.
+  if (left === right) {
+    rightPalSub = str[right];
+    left--;
+    right++;
+  }
+
+  while (left >= 0 && right < str.length && str[left] === str[right]) {
+    leftPalSub = str[left] + leftPalSub; // prepend.
+    rightPalSub += str[right];
+    left--;
+    right++;
+  }
+  return leftPalSub + rightPalSub;
+}
