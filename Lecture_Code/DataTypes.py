@@ -142,8 +142,4 @@ for value in dict1.values():
 for key, value in dict1.items():
     print(key, value)
 
-print(dict1.keys())
 
-mykeys = list(dict1.keys())
-
-print(mykeys[0])
