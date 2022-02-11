@@ -11,11 +11,34 @@ def index():
 #---------------------------------------
 @app.route('/register')
 def disp_register():
+
+    if "s_name" and "s_email" in session:
+        return redirect('/user/success')
+
     return render_template('index.html')
 
 @app.route('/user/success')
 def disp_dashboard():
+
+    if "s_name" and "s_email" not in session:
+        return redirect('/register')
+
+
     return render_template("success.html", f_name=session["s_name"])
+
+@app.route('/number')
+def disp_num():
+    if 'count' not in session:
+        session['count'] = 1
+    session['count'] += 1
+
+    # if 'count' in session:
+    #     session['count'] += 1
+    # else:
+    #     session['count'] = 1
+
+    return render_template('number.html', count=session['count'])
+
 
 # action routes
 #-----------------------------------
