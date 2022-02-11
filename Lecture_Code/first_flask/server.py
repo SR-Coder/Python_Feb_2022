@@ -1,5 +1,4 @@
-from distutils.log import debug
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -26,7 +25,9 @@ def say_hello_to(name):
 def say_hello_to_age(name, age):
     return f'Hello {name} Thanks for stopping by!!i am {age} years old!!!'
 
-
+@app.route("/test_template")
+def test_template():
+    return render_template("index.html")
 
 
 
