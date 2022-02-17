@@ -1,41 +1,36 @@
 /* 
-  Given an arr and a separator string, output a string of every item in the array separated by the separator.
-  
-  No trailing separator at the end
-  Default the separator to a comma with a space after it if no separator is provided
+Parens Valid
+
+Given an str that has parenthesis in it
+return whether the parenthesis are valid
 */
 
-const arr1 = [1, 2, 3];
-const separator1 = ", ";
-const expected1 = "1, 2, 3";
+const str1 = "Y(3(p)p(3)r)s";
+const expected1 = true;
 
-const arr2 = [1, 2, 3];
-const separator2 = "-";
-const expected2 = "1-2-3";
+const str2 = "N(0(p)3";
+const expected2 = false;
+// Explanation: not every parenthesis is closed.
 
-const arr3 = [1, 2, 3];
-const separator3 = " - ";
-const expected3 = "1 - 2 - 3";
+const str3 = "N(0)t ) 0(k";
+const expected3 = false;
+// Explanation: because the second ")" is premature: there is nothing open for it to close.
 
-const arr4 = [1];
-const separator4 = ", ";
-const expected4 = "1";
-
-const arr5 = [];
-const separator5 = ", ";
-const expected5 = "";
+const str4 = "a(b))(c";
+const expected4 = false;
+// Explanation: same number of opens and closes but the 2nd closing closes nothing.
 
 /**
- * Converts the given array into a string of items separated by the given separator.
+ * Determines whether the parenthesis in the given string are valid.
+ * Each opening parenthesis must have exactly one closing parenthesis.
  * - Time: O(?).
  * - Space: O(?).
- * @param {Array<string|number|boolean>} arr The items to be joined as a string.
- * @param {string} separator To separate each item of the given arr.
- * @returns {string} The given array items as a string separated by the given separator.
+ * @param {string} str
+ * @returns {boolean} Whether the parenthesis are valid.
  */
-function join(arr, separator) {}
+function parensValid(str) {}
 
-module.exports = { join };
+module.exports = { parensValid };
 
 /*****************************************************************************/
 
@@ -43,99 +38,122 @@ module.exports = { join };
  * - Time: O(n) linear.
  * - Space: O(n) linear.
  */
-function join(arr, separator = ", ") {
-  let joined = "";
+function parensValid(str) {
+  const parensStack = [];
 
-  if (!arr.length) {
-    return joined;
-  }
-
-  // less than arr.length - 1 to stop before last
-  for (let i = 0; i < arr.length - 1; i++) {
-    joined += arr[i] + separator;
-  }
-  return joined + arr[arr.length - 1];
-}
-
-/**
- * - Time: O(n) linear.
- * - Space: O(n) linear.
- */
-function join2(arr, separator = ", ") {
-  let joined = "";
-
-  if (!arr.length) {
-    return joined;
-  }
-
-  joined += arr[0];
-
-  for (let i = 1; i < arr.length; i++) {
-    // Concatenate separator first to avoid trailing separator
-    joined += separator + arr[i];
-  }
-  return joined;
-}
-
-/**
- * - Time: O(n) linear.
- * - Space: O(n) linear.
- */
-function join3(arr, separator = ", ") {
-  let joined = "";
-
-  if (!arr.length) {
-    return joined;
-  }
-
-  for (let i = 0; i < arr.length; i++) {
-    const elem = arr[i];
-
-    joined += i === arr.length - 1 ? elem : elem + separator;
-
-    // without ternary
-    // if (i === arr.length - 1) {
-    //   joined += elem;
-    // } else {
-    //   joined += elem + separator;
-    // }
-  }
-  return joined;
-}
-
-/*****************************************************************************/
-
-/**
- * - Time: O(n) linear.
- * - Space: O(n) linear.
- */
-function bookIndex(pageNums) {
-  let formattedPageNums = "";
-  let pageRangeStartIdx = 0;
-
-  for (let i = 0; i < pageNums.length; i++) {
-    let currentPageNum = pageNums[i];
-    let nextPageNum = pageNums[i + 1];
-    let pageRangeStopIdx = i;
-
-    // page range is not sequential
-    if (currentPageNum + 1 !== nextPageNum) {
-      // single page, no range
-      if (pageRangeStartIdx === pageRangeStopIdx) {
-        formattedPageNums += currentPageNum;
+  for (const char of str) {
+    if (char === "(") {
+      parensStack.push(char);
+    } else if (char === ")") {
+      if (parensStack.length === 0) {
+        return false;
+      } else {
+        parensStack.pop();
       }
-      // we have a page range
-      else {
-        formattedPageNums += `${pageNums[pageRangeStartIdx]}-${pageNums[pageRangeStopIdx]}`;
-      }
-      if (i !== pageNums.length - 1) {
-        formattedPageNums += ", ";
-      }
-
-      // Since we've added a page range
-      // need to get start idx set up for next page range
-      pageRangeStartIdx = i + 1;
     }
   }
-  return formattedPageNums;
+  return parensStack.length === 0;
+}
+
+/**
+ * - Time: O(n) linear.
+ * - Space: O(n) linear.
+ */
+function parensValidCount(str) {
+  let openLessCloseCount = 0;
+
+  for (const char of str) {
+    if (char === "(") {
+      openLessCloseCount++;
+    } else if (char === ")") {
+      if (openLessCloseCount === 0) {
+        return false;
+      } else openLessCloseCount--;
+    }
+  }
+  return openLessCloseCount === 0;
+}
+
+/* 
+Braces Valid
+
+Given a string sequence of parentheses, braces and brackets, determine whether it is valid. 
+*/
+
+const str1 = "W(a{t}s[o(n{ c}o)m]e )h[e{r}e]!";
+const expected1 = true;
+
+const str2 = "D(i{a}l[ t]o)n{e";
+const expected2 = false;
+
+const str3 = "A(1)s[O (n]0{t) 0}k";
+const expected3 = false;
+
+/**
+ * Determines whether the string's braces, brackets, and parenthesis are valid
+ * based on the order and amount of opening and closing pairs.
+ * - Time: O(?).
+ * - Space: O(?).
+ * @param {string} str
+ * @returns {boolean} Whether the given strings braces are valid.
+ */
+function bracesValid(str) {}
+
+module.exports = { bracesValid };
+
+/*****************************************************************************/
+
+/**
+ * - Time: O(n) linear.
+ * - Space: O(n) linear.
+ */
+function bracesValid(str) {
+  const stack = [];
+  const closeToOpen = { ")": "(", "}": "{", "]": "[" };
+
+  for (let i = 0; i < str.length; i++) {
+    switch (str[i]) {
+      case "(":
+      case "{":
+      case "[":
+        stack.push(str[i]);
+        break;
+      case ")":
+      case "}":
+      case "]":
+        if (closeToOpen[str[i]] === stack[stack.length - 1]) {
+          stack.pop();
+        } else {
+          return false;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return stack.length === 0;
+}
+
+/**
+ * - Time: O(n * m) where n = str.length and m = opens.length,
+ *    since opens.length is constant length of 3 -> O(3n) -> O(n) linear.
+ * - Space: O(n) linear.
+ */
+function bracesValid2(str) {
+  const stack = [];
+  const opens = "({[";
+  const closeToOpen = { ")": "(", "}": "{", "]": "[" };
+
+  for (let i = 0; i < str.length; i++) {
+    if (opens.includes(str[i])) {
+      stack.push(str[i]);
+    } else if (str[i] in closeToOpen) {
+      if (closeToOpen[str[i]] === stack[stack.length - 1]) {
+        stack.pop();
+      } else {
+        return false;
+      }
+    }
+  }
+  return stack.length === 0;
 }

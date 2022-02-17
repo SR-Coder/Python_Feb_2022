@@ -1,0 +1,12 @@
+<h1>Update a Friend!</h1>
+
+<form action="/update_user" method="post">
+    <input type="hidden" name="id" value="{{friend.id}}">
+    <label>First Name:</label>
+    <input name="first_name" value="{{friend.first_name}}" type="text">
+    <label>Last Name:</label>
+    <input name="last_name" value="{{friend.last_name}}" type="text">
+    <label>Occupation:</label>
+    <input name="occupation" value="{{friend.occupation}}" type="text">
+    <input type="submit" value="Submit">
+</form>
