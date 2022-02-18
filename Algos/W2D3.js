@@ -1,5 +1,6 @@
-* 
+/* 
 Parens Valid
+
 Given an str that has parenthesis in it
 return whether the parenthesis are valid
 */
@@ -33,8 +34,49 @@ module.exports = { parensValid };
 
 /*****************************************************************************/
 
+/**
+ * - Time: O(n) linear.
+ * - Space: O(n) linear.
+ */
+function parensValid(str) {
+  const parensStack = [];
+
+  for (const char of str) {
+    if (char === "(") {
+      parensStack.push(char);
+    } else if (char === ")") {
+      if (parensStack.length === 0) {
+        return false;
+      } else {
+        parensStack.pop();
+      }
+    }
+  }
+  return parensStack.length === 0;
+}
+
+/**
+ * - Time: O(n) linear.
+ * - Space: O(n) linear.
+ */
+function parensValidCount(str) {
+  let openLessCloseCount = 0;
+
+  for (const char of str) {
+    if (char === "(") {
+      openLessCloseCount++;
+    } else if (char === ")") {
+      if (openLessCloseCount === 0) {
+        return false;
+      } else openLessCloseCount--;
+    }
+  }
+  return openLessCloseCount === 0;
+}
+
 /* 
 Braces Valid
+
 Given a string sequence of parentheses, braces and brackets, determine whether it is valid. 
 */
 
@@ -60,3 +102,58 @@ function bracesValid(str) {}
 module.exports = { bracesValid };
 
 /*****************************************************************************/
+
+/**
+ * - Time: O(n) linear.
+ * - Space: O(n) linear.
+ */
+function bracesValid(str) {
+  const stack = [];
+  const closeToOpen = { ")": "(", "}": "{", "]": "[" };
+
+  for (let i = 0; i < str.length; i++) {
+    switch (str[i]) {
+      case "(":
+      case "{":
+      case "[":
+        stack.push(str[i]);
+        break;
+      case ")":
+      case "}":
+      case "]":
+        if (closeToOpen[str[i]] === stack[stack.length - 1]) {
+          stack.pop();
+        } else {
+          return false;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return stack.length === 0;
+}
+
+/**
+ * - Time: O(n * m) where n = str.length and m = opens.length,
+ *    since opens.length is constant length of 3 -> O(3n) -> O(n) linear.
+ * - Space: O(n) linear.
+ */
+function bracesValid2(str) {
+  const stack = [];
+  const opens = "({[";
+  const closeToOpen = { ")": "(", "}": "{", "]": "[" };
+
+  for (let i = 0; i < str.length; i++) {
+    if (opens.includes(str[i])) {
+      stack.push(str[i]);
+    } else if (str[i] in closeToOpen) {
+      if (closeToOpen[str[i]] === stack[stack.length - 1]) {
+        stack.pop();
+      } else {
+        return false;
+      }
+    }
+  }
+  return stack.length === 0;
+}
